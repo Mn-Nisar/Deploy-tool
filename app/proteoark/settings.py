@@ -7,10 +7,26 @@ SECRET_KEY = "django-insecure-xji_t-5+)%y!fs#odgz83dkg@la4ee!u36qs$hf557$6qdblc7
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
-
+ALLOWED_HOSTS = [
+    "ciods.in",
+    "proteoark.ciods.in",
+    "localhost",
+    "127.0.0.1",
+    "app",        # Docker service name
+]
 # Application definition
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost:3000', 
+                         "https://ciods.in",  
+                            "https://proteoark.ciods.in",
+                         'http://localhost:8000','http://localhost:80']
+
+CORS_EXPOSE_HEADERS=['Content-Type', 'X-CSRFToken']
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SAMESITE = 'Lax'
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
@@ -54,6 +70,16 @@ TEMPLATES = [
         },
     },
 ]
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',  # Replace with your Next.js frontend URL
+    "https://ciods.in",
+    "https://proteoark.ciods.in",
+    'http://localhost:8000',
+]
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = True
 
 WSGI_APPLICATION = "proteoark.wsgi.application"
 
