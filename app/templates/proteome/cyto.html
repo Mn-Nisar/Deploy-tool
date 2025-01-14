@@ -1,0 +1,237 @@
+{% extends 'proteome/base.html' %}
+
+{% block content %}
+
+
+
+<!-- <style type="text/css">
+
+a{
+color: black;
+text-decoration: none;
+}
+
+
+
+#cy{
+  width: 100%;
+  height: 74vh;
+  display: block;
+  background-color: #fff;
+}
+
+
+
+
+</style> -->
+
+<style>
+  .demo { width: 620px }
+
+ul { width: 400px; height: 150px; padding: 2em; margin: 10px; color:#ddd; list-style: none; }
+ul li { cursor: pointer; }
+
+#draggable { background: #444; }
+#droppable { background: #222; }
+.ui-state-highlight {
+  background-color: rgb(52, 214, 130);
+}
+</style>
+
+
+
+<div class="demo">
+  <p>Available Boxes (click to select multiple boxes)</p>    
+  <ul id="draggable">
+      <li>Box #1</li>
+      <li>Box #2</li>
+      <li>Box #3</li>
+      <li>Box #4</li>
+  </ul>
+  
+  <p>My Boxes</p>
+  <ul id="droppable">
+  </ul>
+  
+</div>
+<script>
+$(document).ready(function() {
+
+var selectedClass = 'ui-state-highlight',
+    clickDelay = 600,
+    // click time (milliseconds)
+    lastClick, diffClick; // timestamps
+
+$("#draggable li")
+// Script to deferentiate a click from a mousedown for drag event
+.bind('mousedown mouseup', function(e) {
+    if (e.type == "mousedown") {
+        lastClick = e.timeStamp; // get mousedown time
+    } else {
+        diffClick = e.timeStamp - lastClick;
+        if (diffClick < clickDelay) {
+            // add selected class to group draggable objects
+            $(this).toggleClass(selectedClass);
+        }
+    }
+})
+.draggable({
+    revertDuration: 10,
+    // grouped items animate separately, so leave this number low
+    containment: '.demo',
+    start: function(e, ui) {
+        ui.helper.addClass(selectedClass);
+    },
+    stop: function(e, ui) {
+        // reset group positions
+        $('.' + selectedClass).css({
+            top: 0,
+            left: 0
+        });
+    },
+    drag: function(e, ui) {
+        // set selected group position to main dragged object
+        // this works because the position is relative to the starting position
+        $('.' + selectedClass).css({
+            top: ui.position.top,
+            left: ui.position.left
+        });
+    }
+});
+
+$("#droppable, #draggable").sortable().droppable({
+    drop: function(e, ui) {
+        $('.' + selectedClass).appendTo($(this)).add(ui.draggable) // ui.draggable is appended by the script, so add it after
+        .removeClass(selectedClass).css({
+            top: 0,
+            left: 0
+        });
+    }
+});
+
+});
+</script>
+
+<script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" integrity="sha256-xLD7nhI62fcsEZK2/v8LsBcb4lG7dgULkuXoXB/j91c=" crossorigin="anonymous"></script>
+
+<!-- <div class="cotainer mt-1" >
+
+
+      <div id="cy"></div>
+ </div> 
+<script>
+var cy = cytoscape({
+
+    container: document.getElementById('cy'), 
+elements: [
+  {data : {id : "1" , label : "cat"}},
+  {data : {id : "2" , label : "sparrow"}},
+  {data : {id : "3" , label : "ghoper"}},
+  {data : {id : "4" , label : "fly"}},
+  {data : {id : "5" , label : "grass"}},
+  {data : {source : "1" , target : "2"}},
+  {data : {source : "2" , target : "3"}},
+  {data : {source : "2" , target : "4"}},
+  {data : {source : "3" , target : "5"}},
+
+
+],
+style: [ 
+  {
+    selector: 'node',
+    style: {
+      'background-color': '#69e',
+      'label': 'data(id)',
+      'width': '200px',
+      'height': '100px',
+
+    }
+  },
+
+  {
+    selector: 'edge',
+    style: {
+      'width': 1,
+      'line-color': '#000000',
+      'target-arrow-color': '#000000',
+      'target-arrow-shape': 'triangle',
+    }
+  }
+],
+style: cytoscape.stylesheet()
+.selector('node')
+  .css({
+    'content': 'data(label)',
+    'font-size': '6px',
+    'text-valign': 'center',
+    
+  })
+  .selector('#1')
+  .css({
+    'background-image': 'https://live.staticflickr.com/1261/1413379559_412a540d29_b.jpg',
+    'width': '100px',
+    'height': '100px',
+    'background-fit': 'cover',
+    'background-color': '#69e',
+    
+    
+  })
+  .selector('#2')
+  .css({
+    'background-image': 'https://live.staticflickr.com/7272/7633179468_3e19e45a0c_b.jpg',
+    'width': '100px',
+    'height': '100px',
+    'background-fit': 'cover',
+    
+    
+  })
+  .selector('#3')
+  .css({
+    'background-image': 'https://live.staticflickr.com/8316/8003798443_32d01257c8_b.jpg',
+    'width': '100px',
+    'height': '100px',
+    'background-fit': 'cover',
+    
+    
+  })
+  .selector('#4')
+  .css({
+    'background-image': 'https://live.staticflickr.com/3063/2751740612_af11fb090b_b.jpg',
+    'width': '100px',
+    'height': '100px',
+    'background-fit': 'cover',
+    
+    
+  })
+  .selector('#5')
+  .css({
+    'background-image': 'https://live.staticflickr.com/3866/14420309584_78bf471658_b.jpg',
+    'width': '100px',
+    'height': '100px',
+    'background-fit': 'cover',
+    
+    
+  })
+  .selector(':selected'),
+
+layout: {
+  name: 'breadthfirst',
+    directed: true,
+    padding: 10
+},
+
+
+});
+
+
+
+</script> -->
+
+
+
+
+
+{% endblock %}
+
+

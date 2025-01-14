@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: ./app
+    restart: always
+    image: proteoark
+    volumes:
+      - static-data:/vol/web
+    environment:
+      - PORT=8000
+    env_file:
+      - app/.env
+
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    image: proxy
+    depends_on:
+      - app
+    ports:
+      - 80:80
+    volumes:
+      - static-data:/vol/static
+
+volumes:
+  static-data:
